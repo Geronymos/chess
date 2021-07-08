@@ -2,6 +2,9 @@
 
 board=()
 for i in {0..63}; do board[$i]=" "; done;
+
+rowname="ABCDEFGH"
+
 # ♔
 # ♕
 # ♖
@@ -28,9 +31,29 @@ for i in 57 62; do board[$i]="H"; done;
 for i in 58 61; do board[$i]="N"; done;
 board[60]="Q"
 board[59]="K"
+function render() {
+    echo {A..H} | sed "s/^/  /" 
+    for field in ${!board[@]}
+    do
+        # printf "$((((field) % 8 == 0)) && echo ${rowname:(((field+1)/8)):1]})"
+        ((field %8 == 0)) && printf "$(((field)/8+1)) "
+        printf "\e[31;4$(( ( field + (field / 8 %2 == 0) ) % 2 *7))m"
+        printf "${board[$field]} " | 
+        sed "s/b/♙/; s/h/♘/; s/n/♗/; s/t/♖/; s/q/♔/; s/k/♕/; s/B/♟/; s/H/♞/; s/N/♝/; s/T/♜/; s/Q/♚/; s/K/♛/;"
+        (((field+1) % 8 == 0)) && printf "\e[0:0m\n"
+        
+    done
+}
 
-for field in ${!board[@]}
+while true
 do
-    printf "\e[31;4$(( ( field + (field / 8 %2 == 0) ) % 2 *7))m ${board[$field]} $((((field+1) % 8 == 0)) && echo '\e[0:0m\n')" | 
-    sed "s/b/♙/; s/h/♘/; s/n/♗/; s/t/♖/; s/q/♔/; s/k/♕/; s/B/♟/; s/H/♞/; s/N/♝/; s/T/♜/; s/Q/♚/; s/K/♛/;"
+    # clear
+    code=""
+    render
+    while [[ ! "$code" =~ ^[A-Z][0-9]:[A-Z][0-9]$ ]]
+    do
+        read -p "[from letter][from number]:[to letter][to number]" code
+    done
+    echo hi
 done
+
