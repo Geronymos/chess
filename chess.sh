@@ -1,7 +1,7 @@
 # !/bin/bash
 
 board=()
-for i in {0..63}; do board[$i]=""; done;
+for i in {0..63}; do board[$i]=" "; done;
 # ♔
 # ♕
 # ♖
@@ -29,4 +29,7 @@ for i in 58 61; do board[$i]="N"; done;
 board[60]="Q"
 board[59]="K"
 
-for row in {0..7}; do echo "${board[@]:$(($row*8)):8}"; done
+for field in ${!board[@]}
+do
+    printf "\e[31;4$(( ( field + (field / 8 %2 == 0) ) % 2 *7))m ${board[$field]} $((((field+1) % 8 == 0)) && echo '\e[0:0m\n')"
+done
