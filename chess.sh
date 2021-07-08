@@ -54,6 +54,14 @@ do
     do
         read -p "[from letter][from number]:[to letter][to number]" code
     done
-    echo hi
+    from_x=$(echo "ABCDEFGH" | grep -aob "${code:0:1}")
+    from_x=${from_x:0:1}
+    from_y=${code:1:1}
+    to_x=$(echo "ABCDEFGH" | grep -aob "${code:3:1}")
+    to_x=${to_x:0:1}
+    to_y=${code:4:1}
+    echo "$from_x $from_y $to_x $to_y"
+    board[(((to_y-1)*8-1+to_x+1))]=${board[(((from_y-1)*8-1+from_x+1))]}
+    board[(((from_y-1)*8-1+from_x+1))]=" "
 done
 
