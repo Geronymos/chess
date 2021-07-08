@@ -31,5 +31,6 @@ board[59]="K"
 
 for field in ${!board[@]}
 do
-    printf "\e[31;4$(( ( field + (field / 8 %2 == 0) ) % 2 *7))m ${board[$field]} $((((field+1) % 8 == 0)) && echo '\e[0:0m\n')"
+    printf "\e[31;4$(( ( field + (field / 8 %2 == 0) ) % 2 *7))m ${board[$field]} $((((field+1) % 8 == 0)) && echo '\e[0:0m\n')" | 
+    sed "s/b/♙/; s/h/♘/; s/n/♗/; s/t/♖/; s/q/♔/; s/k/♕/; s/B/♟/; s/H/♞/; s/N/♝/; s/T/♜/; s/Q/♚/; s/K/♛/;"
 done
